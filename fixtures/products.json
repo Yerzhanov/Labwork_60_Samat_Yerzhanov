@@ -1,0 +1,80 @@
+[
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "name": "Худи черного цвета с монограммами adidas Originals",
+    "description": "Мягкая ткань для свитшотов. Стиль и комфорт – это образ жизни.",
+    "category": 5,
+    "date_added": "2023-02-21T07:45:34.913Z",
+    "price": "8000.00",
+    "quantity": 20,
+    "image": "products_images/Adidas-hoodie.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "name": "Синяя куртка The North Face",
+    "description": "Гладкая ткань. Водонепроницаемое покрытие. Легкий и теплый пуховый наполнитель.",
+    "category": 4,
+    "date_added": "2023-02-21T07:47:46.850Z",
+    "price": "9000.00",
+    "quantity": 10,
+    "image": "products_images/Blue-jacket-The-North-Face.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "name": "Коричневый спортивный oversized-топ ASOS DESIGN",
+    "description": "Материал с плюшевой текстурой. Удобный и мягкий.",
+    "category": 5,
+    "date_added": "2023-02-21T07:48:49.567Z",
+    "price": "3000.00",
+    "quantity": 25,
+    "image": "products_images/Brown-sports-oversized-top-ASOS-DESIGN.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "name": "Черный рюкзак Nike Heritage",
+    "description": "Плотная ткань. Легкий материал.",
+    "category": 2,
+    "date_added": "2023-02-21T07:51:52.990Z",
+    "price": "2000.00",
+    "quantity": 30,
+    "image": "products_images/Black-Nike-Heritage-backpack.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "name": "Черные туфли на платформе с 3 парами люверсов Dr Martens 1461 Bex",
+    "description": "Гладкий кожаный верх. Натуральный материал.",
+    "category": 3,
+    "date_added": "2023-02-21T07:52:57.739Z",
+    "price": "4000.00",
+    "quantity": 15,
+    "image": "products_images/Black-Dr-Martens-shoes.png"
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "name": "Темно-синие широкие строгие брюки ASOS DESIGN",
+    "description": "Легкая эластичная ткань сирсакер Фактурная ткань.",
+    "category": 4,
+    "date_added": "2023-02-21T07:53:56.434Z",
+    "price": "2500.00",
+    "quantity": 15,
+    "image": "products_images/Dark-blue-wide-leg-ASOs-DESIGN-trousers.png"
+  }
+}
+]
