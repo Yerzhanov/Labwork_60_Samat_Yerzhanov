@@ -61,12 +61,12 @@
                         </a>
                         <div class="card-body">
                             <h4 class="card-title">
-                                <a href="#">{{ product.name }}</a>
+                                <a href="{% url 'product_view' product.id %}">{{ product.name }}</a>
                             </h4>
                             <h5>{{ product.price }} тенге</h5>
                             <p class="card-text">{{ product.description }}</p>
                         </div>
-                        <a href="#">Подробнее</a>
+                        <a href="{% url 'product_view' product.id %}">Подробнее</a>
                         <div class="card-footer text-center">
                             <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
                         </div>
