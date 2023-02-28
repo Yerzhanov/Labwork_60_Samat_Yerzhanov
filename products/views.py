@@ -13,13 +13,13 @@ def index(request):
 def products(request):
     context = {
         'title': 'Товары',
-        'products': Product.objects.all(),
-        'categories': ProductCategory.objects.all(),
+        'products': Product.objects.all().order_by('name'),
+        'categories': ProductCategory.objects.all().order_by('name'),
     }
     return render(request, 'products.html', context)
 
 
-def product_view(request,product_pk):
+def product_view(request, product_pk):
         product = get_object_or_404(Product, pk=product_pk)
         if request.method == 'GET':
             form = ProductForm(instance=product)
