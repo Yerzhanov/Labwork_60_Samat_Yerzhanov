@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),
     path('products/', include('products.urls', namespace='products')),
-    # path('products/add/', products_add, name='products_add'),
+    path('products/add/', product_add, name='product_add'),
     path('users/', include('users.urls', namespace='users')),
 
     path('product/<int:product_pk>', product_view, name='product_view'),

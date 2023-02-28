@@ -54,7 +54,7 @@
                 {% for product in products %}
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="card h-100">
-                        <a href="#">
+                        <a href="{% url 'product_view' product.id %}">
                             <img class="card-img-top"
                                  src="{{ product.image.url }}"
                                  alt="">
@@ -63,12 +63,16 @@
                             <h4 class="card-title">
                                 <a href="{% url 'product_view' product.id %}">{{ product.name }}</a>
                             </h4>
+                            <h5>{{ product.category.name }}</h5>
                             <h5>{{ product.price }} тенге</h5>
-                            <p class="card-text">{{ product.description }}</p>
+                            <p class="card-text">{{ product.description |truncatechars:30 }}</p>
                         </div>
                         <a href="{% url 'product_view' product.id %}">Подробнее</a>
                         <div class="card-footer text-center">
-                            <button type="button" class="btn btn-outline-success">Отправить в корзину</button>
+                            <a class="btn btn-outline-success"
+                               href="{% url 'products:basket_add' product.id %}">
+                                Отправить в корзину
+                            </a>
                         </div>
                     </div>
                 </div>

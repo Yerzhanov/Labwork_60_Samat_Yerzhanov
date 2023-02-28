@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from products.forms import *
 from products.models import ProductCategory, Product, Basket
 from users.models import User
@@ -34,7 +35,21 @@ def product_view(request, product_pk):
                 return render(request, 'product_view.html',
                               {'product': product , 'form': form, 'error': 'Неправильно введенные данные'})
 
+def product_add(request):
+    if request.method == 'GET':
+        form = ProductForm()
+        return render(request, 'product_add.html', {'form': form})
+    else:
+        form = ProductForm(data=request.POST)
+        if not form.is_valid():
+            return render(request, 'product_add.html', context={'form': form})
+        else:
+            product = Product.objects.create(**form.cleaned_data)
+            return redirect('products:index', pk=product.pk)
 
+
+
+@login_required()
 def basket_add(request, product_id):
     product = Product.objects.get(id=product_id)
     baskets = Basket.objects.filter(user=request.user, product=product)
@@ -48,6 +63,7 @@ def basket_add(request, product_id):
 
     return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
+@login_required()
 def basket_remove(request, basket_id):
     basket = Basket.objects.get(id=basket_id)
     basket.delete()
