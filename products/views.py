@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from products.forms import *
-from products.models import ProductCategory, Product
+from products.models import ProductCategory, Product, Basket
+from users.models import User
 
 
 def index(request):
@@ -31,5 +32,17 @@ def product_view(request, product_pk):
                 return redirect('index')
             except ValueError:
                 return render(request, 'product_view.html',
-                              {'product': product , 'form': form, 'error': 'Неправильно введеные данные'})
+                              {'product': product , 'form': form, 'error': 'Неправильно введенные данные'})
+
+def basket_add(request, product_id):
+    product = Product.objects.get(id=product_id)
+    baskets = Basket.objects.filter(user=request.user, product=product)
+
+    if not baskets.exists():
+        Basket.objects.create(user=request.user, product=product, quantity=1)
+    else:
+        bakset = baskets.first()
+        bakset.quantity += 1
+        bakset.save()
+
 
