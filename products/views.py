@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from products.forms import *
 from products.models import ProductCategory, Product, Basket
 from users.models import User
@@ -34,6 +34,7 @@ def product_view(request, product_pk):
                 return render(request, 'product_view.html',
                               {'product': product , 'form': form, 'error': 'Неправильно введенные данные'})
 
+
 def basket_add(request, product_id):
     product = Product.objects.get(id=product_id)
     baskets = Basket.objects.filter(user=request.user, product=product)
@@ -41,8 +42,15 @@ def basket_add(request, product_id):
     if not baskets.exists():
         Basket.objects.create(user=request.user, product=product, quantity=1)
     else:
-        bakset = baskets.first()
-        bakset.quantity += 1
-        bakset.save()
+        basket = baskets.first()
+        basket.quantity += 1
+        basket.save()
+
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
+
+def basket_remove(request, basket_id):
+    basket = Basket.objects.get(id=basket_id)
+    basket.delete()
+    return HttpResponseRedirect(request.META['HTTP_REFERER'])
 
 
