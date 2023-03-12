@@ -6,18 +6,26 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=128, default='Other')
     description = models.TextField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
+
     def __str__(self):
         return self.name
 
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(max_length=500, null=True, blank=True, verbose_name='Описание продукта')
     category = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE)
     date_added = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to='products_images')
+    image = models.ImageField(upload_to='products_images', verbose_name='Картинка')
+
+    class Meta:
+        verbose_name = 'Product'
+        verbose_name_plural = 'Products'
 
     def __str__(self):
         return f'Продукт: {self.name} | Категория {self.category.name}'

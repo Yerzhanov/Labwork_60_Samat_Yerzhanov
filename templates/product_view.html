@@ -21,6 +21,7 @@
                             <p class="card-text">{{ product.description }}</p>
                         </div>
                         <a href="{% url 'products:index' %}">Вернуться</a>
+                        <a href="{% url 'product_update' product.id %}">Изменить</a>
                     </div>
                 </div>
 {% endblock %}

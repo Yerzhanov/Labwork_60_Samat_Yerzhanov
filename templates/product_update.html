@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-       <form action="{% url 'category_add' %}" method="post">>
+       <form action="{% url 'product_update' product.id %}" method="post" enctype="multipart/form-data">>
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button type="submit" class="btn btn-primary">Сохранить</button>
