@@ -21,12 +21,14 @@ from products.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
+    path('', IndexView.as_view(), name='index'),
     path('products/', include('products.urls', namespace='products')),
-    path('products/add/', product_add, name='product_add'),
+    path('products/add/', ProductCreateView.as_view(), name='product_add'),
+    path('categor_add/', CategoryCreateView.as_view(), name='category_add'),
     path('users/', include('users.urls', namespace='users')),
 
     path('product/<int:product_pk>', product_view, name='product_view'),
+    path('product/<int:pk>/', ProductUpdateView.as_view(), name='product_update'),
 ]
 
 if settings.DEBUG:

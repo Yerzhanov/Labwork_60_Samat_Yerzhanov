@@ -1,53 +1,83 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
+from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
 from products.forms import *
 from products.models import ProductCategory, Product, Basket
-from users.models import User
+from django.db.models.functions import Lower
 
 
-def index(request):
-    context = {
-        'title': 'Магазин',
-    }
-    return render(request, 'index.html', context)
+class IndexView(TemplateView):
+    template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data()
+        context['title'] = 'Магазин'
+        return context
 
 
-def products(request):
-    context = {
-        'title': 'Товары',
-        'products': Product.objects.all().order_by('name'),
-        'categories': ProductCategory.objects.all().order_by('name'),
-    }
-    return render(request, 'products.html', context)
+class ProductsListView(ListView):
+     model = Product
+     template_name = 'products.html'
+     paginate_by = 6
+
+     def get_queryset(self):
+         queryset = super(ProductsListView, self).get_queryset().order_by(Lower('name'))
+         category_id = self.kwargs.get('category_id')
+         return queryset.filter(category_id=category_id) if category_id else queryset
+
+     def get_context_data(self, *, object_list=None, **kwargs):
+         context = super(ProductsListView, self).get_context_data()
+         context['title'] = 'Каталог товаров'
+         context['categories'] = ProductCategory.objects.all().order_by('-name')
+         return context
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'product_update.html'
+
+    def get_success_url(self):
+        return reverse_lazy('product_view', args=(self.object.id,))
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductUpdateView, self).get_context_data()
+        context['title'] = 'Магазин - Просмотр товара'
+        return context
 
 
 def product_view(request, product_pk):
         product = get_object_or_404(Product, pk=product_pk)
-        if request.method == 'GET':
-            form = ProductForm(instance=product)
-            return render(request, 'product_view.html', {'product': product, 'form': form})
-        else:
-            try:
-                form = ProductForm(request.POST, instance=product)
-                form.save()
-                return redirect('index')
-            except ValueError:
-                return render(request, 'product_view.html',
-                              {'product': product , 'form': form, 'error': 'Неправильно введенные данные'})
-
-def product_add(request):
-    if request.method == 'GET':
-        form = ProductForm()
-        return render(request, 'product_add.html', {'form': form})
-    else:
-        form = ProductForm(data=request.POST)
-        if not form.is_valid():
-            return render(request, 'product_add.html', context={'form': form})
-        else:
-            product = Product.objects.create(**form.cleaned_data)
-            return redirect('products:index', pk=product.pk)
+        return render(request, 'product_view.html', {'product': product})
 
 
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'product_add.html'
+    extra_context = {'title': 'Добавить товар'}
+    success_url = reverse_lazy('products:index')
+
+class CategoryCreateView(CreateView):
+    model = ProductCategory
+    form_class = CategoryForm
+    template_name = 'category_add_view.html'
+    extra_context = {'title': 'Добавить категорию'}
+    success_url = reverse_lazy('products:index')
+
+
+# class BasketCreateView(CreateView):  #Ломается логика при попытке перевода на классовое представление
+#     model = Basket
+#
+#     def post(self, request, *args, **kwargs):
+#         product = Product.objects.get(id=self.kwargs.get('product_id'))
+#         baskets = Basket.objects.filter(user=request.user, product=product)
+#
+#         if not baskets.exists():
+#             pass
 
 @login_required()
 def basket_add(request, product_id):
