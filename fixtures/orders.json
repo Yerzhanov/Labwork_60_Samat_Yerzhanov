@@ -1,0 +1,32 @@
+[
+{
+  "model": "orders.order",
+  "pk": 1,
+  "fields": {
+    "first_name": "Самат",
+    "last_name": "Ержанов",
+    "email": "dearhauer@gmail.com",
+    "address": "г.Алматы, Панфилова 139",
+    "created": "2023-03-13T10:26:59.754Z",
+    "status": 0,
+    "basket_history": {},
+    "initiator": 1
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 2,
+  "fields": {
+    "first_name": "Самат",
+    "last_name": "Ержанов",
+    "email": "dearhauer@gmail.com",
+    "address": "г.Алматы, Панфилова 135",
+    "created": "2023-03-13T11:27:40.518Z",
+    "status": 0,
+    "basket_history": {
+      "total_sum": 9300
+    },
+    "initiator": 1
+  }
+}
+]

@@ -36,6 +36,7 @@ class ProductsListView(TitleMixin, ListView):
          if self.search_value:
              query = Q(name__icontains=self.search_value) | Q(description__icontains=self.search_value)
              queryset = queryset.filter(query)
+             return queryset
          return queryset.filter(category_id=category_id) if category_id else queryset
 
      def get_context_data(self, *, object_list=None, **kwargs):
