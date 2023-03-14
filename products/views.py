@@ -1,38 +1,58 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.utils.http import urlencode
 from django.views.generic.base import TemplateView
+from django.views.generic import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from products.forms import *
 from products.models import ProductCategory, Product, Basket
 from django.db.models.functions import Lower
+from common.views import TitleMixin
 
-
-class IndexView(TemplateView):
+class IndexView(TitleMixin, TemplateView):
     template_name = 'index.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data()
-        context['title'] = 'Магазин'
-        return context
+    title = 'Магазин'
 
 
-class ProductsListView(ListView):
+class ProductsListView(TitleMixin, ListView):
      model = Product
      template_name = 'products.html'
      paginate_by = 6
+     paginate_orphans = 1
+     title = 'Каталог товаров'
+     ordering = ['name']
+
+     def get(self, request, *args, **kwargs):
+         self.form = self.get_search_form()
+         self.search_value = self.get_search_value()
+         return super().get(request, *args, **kwargs)
 
      def get_queryset(self):
          queryset = super(ProductsListView, self).get_queryset().order_by(Lower('name'))
          category_id = self.kwargs.get('category_id')
+         if self.search_value:
+             query = Q(name__icontains=self.search_value) | Q(description__icontains=self.search_value)
+             queryset = queryset.filter(query)
          return queryset.filter(category_id=category_id) if category_id else queryset
 
      def get_context_data(self, *, object_list=None, **kwargs):
-         context = super(ProductsListView, self).get_context_data()
-         context['title'] = 'Каталог товаров'
+         context = super(ProductsListView, self).get_context_data(object_list=object_list, **kwargs)
+         context['form'] = self.form
          context['categories'] = ProductCategory.objects.all().order_by('-name')
+         if self.search_value:
+             context['query'] = urlencode({'search': self.search_value})
          return context
+
+     def get_search_form(self):
+         return SimpleSearchForm(self.request.GET)
+
+     def get_search_value(self):
+         if self.form.is_valid():
+             return self.form.cleaned_data['search']
+         return None
 
 
 class ProductUpdateView(UpdateView):
@@ -48,10 +68,9 @@ class ProductUpdateView(UpdateView):
         context['title'] = 'Магазин - Просмотр товара'
         return context
 
-
-def product_view(request, product_pk):
-        product = get_object_or_404(Product, pk=product_pk)
-        return render(request, 'product_view.html', {'product': product})
+class ProductDetailView(DetailView):
+    template_name = 'product_view.html'
+    model = Product
 
 
 class ProductCreateView(CreateView):
@@ -60,6 +79,12 @@ class ProductCreateView(CreateView):
     template_name = 'product_add.html'
     extra_context = {'title': 'Добавить товар'}
     success_url = reverse_lazy('products:index')
+
+class ProductDeleteView(DeleteView):
+    template_name = 'product_confirm_delete.html'
+    model = Product
+    context_object_name = 'product'
+    success_url = reverse_lazy('index')
 
 class CategoryCreateView(CreateView):
     model = ProductCategory

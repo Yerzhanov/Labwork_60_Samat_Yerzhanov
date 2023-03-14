@@ -26,9 +26,11 @@ urlpatterns = [
     path('products/add/', ProductCreateView.as_view(), name='product_add'),
     path('categor_add/', CategoryCreateView.as_view(), name='category_add'),
     path('users/', include('users.urls', namespace='users')),
+    path('orders/', include('orders.urls', namespace='orders')),
 
-    path('product/<int:product_pk>', product_view, name='product_view'),
+    path('product/<int:pk>', ProductDetailView.as_view(), name='product_view'),
     path('product/<int:pk>/', ProductUpdateView.as_view(), name='product_update'),
+    path('product/delete/<int:pk>/', ProductDeleteView.as_view(), name='product_delete'),
 ]
 
 if settings.DEBUG:

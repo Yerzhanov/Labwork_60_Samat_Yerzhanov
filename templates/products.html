@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static humanize %}
 
 {% block css %}
  <link href="{% static 'vendor/css/products.css' %}" rel="stylesheet">
@@ -20,7 +20,14 @@
                 </a>
                 {% endfor %}
             </div>
-
+            <form class="text-center" action="" method="GET">
+            <label for="{{ form.search.id_for_label }}">{{ form.search.label }}:</label>
+            {{ form.search }}
+            <input type="submit" value="Search">
+            {% for error in form.search.errors %}
+            <p class="form-error">{{ error }}</p>
+    {% endfor %}
+</form>
         </div>
 
         <div class="col-lg-9">
@@ -66,7 +73,7 @@
                                 <a href="{% url 'product_view' product.id %}">{{ product.name }}</a>
                             </h4>
                             <h5>{{ product.category.name }}</h5>
-                            <h5>{{ product.price }} тенге</h5>
+                            <h5>{{ product.price|intcomma }} тенге</h5>
                             <p class="card-text">{{ product.description |truncatechars:30 }}</p>
                         </div>
                         <a href="{% url 'product_view' product.id %}">Подробнее</a>
@@ -86,7 +93,7 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
                         <a class="page-link"
-                           href="{% if page_obj.has_previous %} {% url 'products:paginator' page_obj.previous_page_number %} {% else %} # {% endif %}"
+                           href="{% if query %}{{ query }}&{% endif %}{% if page_obj.has_previous %} {% url 'products:paginator' page_obj.previous_page_number %} {% else %} # {% endif %}"
                            tabindex="-1" aria-disabled="true">
                             Предыдущая
                         </a>
@@ -94,14 +101,14 @@
                     </li>
                     {% for page in paginator.page_range %}
                         <li class="page-item">
-                            <a class="page-link" href="{% url 'products:paginator' page %}">
+                            <a class="page-link" href="{% if query %}{{ query }}&{% endif %}{% url 'products:paginator' page %}">
                                 {{ page }}
                             </a>
                         </li>
                     {% endfor %}
                     <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
                         <a class="page-link"
-                           href="{% if page_obj.has_next %}{% url 'products:paginator' page_obj.next_page_number %}{% else %} # {% endif %}">
+                           href="{% if query %}{{ query }}&{% endif %}{% if page_obj.has_next %}{% url 'products:paginator' page_obj.next_page_number %}{% else %} # {% endif %}">
                             Следующая
                         </a>
                     </li>

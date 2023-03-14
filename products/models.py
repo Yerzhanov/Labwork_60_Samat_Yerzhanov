@@ -21,7 +21,7 @@ class Product(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0)
-    image = models.ImageField(upload_to='products_images', verbose_name='Картинка')
+    image = models.ImageField(null=True, upload_to='products_images', verbose_name='Картинка')
 
     class Meta:
         verbose_name = 'Product'
